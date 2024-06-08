@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histograma con JSON</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Histograma de Conteo de Objetos</h1>
+    <canvas id="histograma"></canvas>
+
+    <script>
+        // Función para cargar el JSON y crear el histograma
+        async function cargarJSONYCrearHistograma() {
+            try {
+                const response = await fetch('object_counts.json');
+                const data = await response.json();
+
+                // Convertir los datos del JSON en un formato adecuado para Chart.js
+                const labels = Object.keys(data);
+                const counts = Object.values(data);
+
+                // Crear el histograma usando Chart.js
+                const ctx = document.getElementById('histograma').getContext('2d');
+                const histograma = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Conteo',
+                            data: counts,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error al cargar el JSON:', error);
+            }
+        }
+
+        // Llamar a la función para cargar el JSON y crear el histograma al cargar la página
+        window.onload = cargarJSONYCrearHistograma;
+    </script>
+</body>
+</html>
